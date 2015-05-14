@@ -5,9 +5,11 @@ import com.fr.base.FRContext;
 import com.fr.base.Utils;
 import com.fr.json.JSONException;
 import com.fr.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -69,8 +71,24 @@ public class LicUtils {
     }
 
     public static void decode(byte[] paramArrayOfByte, OutputStream paramOutputStream) {
-        StableUtils.invokeMethod("com.fr.base.FRCoreContext", "decode",
-                new Class[] { byte[].class, OutputStream.class }, new Object[] { paramArrayOfByte, paramOutputStream });
+        //StableUtils.invokeMethod("com.fr.base.FRCoreContext", "decode",
+        //        new Class[] { byte[].class, OutputStream.class }, new Object[] { paramArrayOfByte, paramOutputStream });
+    	loadLic(paramOutputStream);
+    }
+    
+    private static void loadLic(OutputStream paramOutputStream) {
+    	byte[] buffer = new byte[1024];
+    	int read = 0;
+    	InputStream inputStream = getLicFileStream();
+    	try {
+			while ((read = inputStream.read(buffer)) != -1) {
+				paramOutputStream.write(buffer, 0, read);
+			}
+			paramOutputStream.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public static String getItemFromLic(String paramString) {
